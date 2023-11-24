@@ -4,7 +4,7 @@ import { BsBell } from "react-icons/bs";
 import { FiEdit } from "react-icons/fi";
 import { HiLogout } from "react-icons/hi";
 import Link from "next/link"
-import { signIn, useSession } from 'next-auth/react';
+import { signIn, useSession,signOut } from 'next-auth/react';
 const Header:React.FC = () => {
   const {data:sessionData,status}=useSession()
   console.log("sessionData",sessionData)
@@ -38,7 +38,7 @@ const Header:React.FC = () => {
           </div>
           {/* Logout */}
           <div>
-            <button className="flex items-center space-x-3 rounded border border-gray-200 px-4 py-2 transition hover:border-gray-900 hover:text-gray-900">
+            <button onClick={()=>signOut()} className="flex items-center space-x-3 rounded border border-gray-200 px-4 py-2 transition hover:border-gray-900 hover:text-gray-900">
               <div>Logout</div>
               <div>
                 <HiLogout />
