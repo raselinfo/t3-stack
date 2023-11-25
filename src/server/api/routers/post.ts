@@ -1,6 +1,9 @@
-// import { z } from "zod";
-
-import { createTRPCRouter, protectedProcedure } from "@server/api/trpc";
+import slugify from "slugify";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "@server/api/trpc";
 import { writeFormSchema } from "~/components/WriteFormModal";
 
 // import {
@@ -45,6 +48,7 @@ import { writeFormSchema } from "~/components/WriteFormModal";
 // });
 
 export const postRouter = createTRPCRouter({
+  // Create Post
   createPost: protectedProcedure
     .input(writeFormSchema)
     .mutation(async ({ ctx, input }) => {
@@ -52,13 +56,12 @@ export const postRouter = createTRPCRouter({
       const { user } = session;
       const { text, description, title } = input;
 
-      
       await db.post.create({
         data: {
           title,
           description,
           text,
-          slug: "afafaf",
+          slug: slugify(title),
           author: {
             connect: {
               id: user.id,
@@ -67,4 +70,14 @@ export const postRouter = createTRPCRouter({
         },
       });
     }),
+
+  // Get Post
+  getPost: publicProcedure.query(async ({ ctx }) => {
+    const posts = await ctx.db.post.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return posts;
+  }),
 });

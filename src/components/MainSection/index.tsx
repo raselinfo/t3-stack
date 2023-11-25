@@ -1,8 +1,13 @@
-import React from 'react';
-import { HiChevronDown } from 'react-icons/hi';
+import React from "react";
+import { HiChevronDown } from "react-icons/hi";
 import { CiSearch } from "react-icons/ci";
-import Post from "src/components/Post"
+import Post from "src/components/Post";
+import { api } from "~/utils/api";
+import { ImSpinner3 } from "react-icons/im";
+
 const index = () => {
+  const getPosts = api.post.getPost.useQuery();
+
   return (
     <main className="col-span-8 border-r border-gray-300 px-24">
       <div className="flex w-full flex-col space-y-4 py-10">
@@ -44,15 +49,21 @@ const index = () => {
             </button>
           </div>
         </div>
-
-        <Post/>
-        <Post/>
-        <Post/>
+        {getPosts.isLoading && (
+          <div className="h-full w-full">
+            <div>Loading...</div>
+            <div>
+              <ImSpinner3 className="animate-spin"/>
+            </div>
+          </div>
+        )}
+        {getPosts.isSuccess &&
+          getPosts.data.map((post) => {
+            return <Post post={post} key={post.id} />;
+          })}
       </div>
-    
     </main>
   );
 };
-
 
 export default index;

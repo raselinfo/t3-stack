@@ -5,7 +5,7 @@ import { Resolver, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ZodObject, ZodSchema, ZodString, z } from "zod";
 import { api } from "~/utils/api";
-
+import toast from "react-hot-toast";
 
 type TWriteFormType = {
   title: string;
@@ -27,19 +27,24 @@ const WriteFormModal = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm<WriteFromSchemaType>({
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     resolver: zodResolver(writeFormSchema),
   });
 
 
-  // Call Trpc api
-  const createPost=api.post.createPost.useMutation({
-    onSuccess(){
-      console.log("Post created successfully")
-    }
-  })
+  const getPosts = api.post.getPost.useQuery();
 
+  // Call Trpc api
+  const createPost= api.post.createPost.useMutation({
+    async onSuccess() {
+      toast.success("Post created successfully!")
+      setIsWriteModalOpen(false)
+      reset()
+      await getPosts.refetch()
+    },
+  });
   const onSubmit = (data: TWriteFormType) => {
     createPost.mutate(data)
   };

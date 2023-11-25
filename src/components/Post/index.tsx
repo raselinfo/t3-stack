@@ -2,7 +2,26 @@ import React from "react";
 import { CiBookmarkPlus } from "react-icons/ci";
 import Link from "next/link";
 import Image from "next/image";
-const index = () => {
+import dayjs from "dayjs"
+
+type PostType = {
+  id: string;
+  title: string;
+  description: string;
+  slug: string;
+  featuredImage: string | null;
+  html: string | null;
+  text: string | null;
+  authorId: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+type PostParamsType = {
+  post: PostType;
+};
+
+const index = ({ post }: PostParamsType) => {
   return (
     <div className=" flex flex-col space-y-4 border-b border-gray-300 pb-8 last:border-none">
       <Link
@@ -24,14 +43,11 @@ const index = () => {
           <p className="font-semibold">
             <span className="decoration-indigo-600 group-hover:underline">
               {/* {post.author.name} */}
-
-              {/* it will remove */}
               Rasel Hossain
             </span>{" "}
             &#x2022;
             <span className="mx-1">
-              {/* {dayjs(post.createdAt).format("DD/MM/YYYY")} */}
-              
+              {dayjs(post.createdAt).format("DD/MM/YYYY")}
               {/* it will remove */}
               05/06/2023
             </span>
@@ -47,18 +63,10 @@ const index = () => {
       >
         <div className="col-span-8 flex h-full w-full flex-col space-y-4">
           <p className="text-2xl font-bold text-gray-800 decoration-indigo-600 group-hover:underline">
-            {/* {post.title} */}
-
-
-            {/* it will remove */}
-            Lorem ipsum dolor sit amet.
+            {post.title}
           </p>
           <p className="h-full w-full max-w-sm truncate break-words text-sm text-gray-500">
-            
-            {/* {post.description} */}
-
-            {/* it will remove */}
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat, unde ullam voluptate voluptatum id quis quidem consequatur quod corporis possimus.
+            {post.description}
           </p>
         </div>
         <div className="col-span-4">
@@ -73,7 +81,7 @@ const index = () => {
             )} */}
 
             {/* It will remove */}
-            <Image src="" alt="photo" className="rounded-xl" fill/>
+            <Image src="" alt="photo" className="rounded-xl" fill />
           </div>
         </div>
       </Link>
