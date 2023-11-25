@@ -4,6 +4,8 @@ import { GlobalContext } from "~/context/GlobalContextProvider";
 import { Resolver, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ZodObject, ZodSchema, ZodString, z } from "zod";
+import { api } from "~/utils/api";
+
 
 type TWriteFormType = {
   title: string;
@@ -11,7 +13,7 @@ type TWriteFormType = {
   text: string;
 };
 
-const writeFormSchema = z.object({
+export const writeFormSchema = z.object({
   title: z.string().max(30).min(20),
   description: z.string().max(100).min(60),
   text: z.string().min(100),
@@ -30,9 +32,19 @@ const WriteFormModal = () => {
     resolver: zodResolver(writeFormSchema),
   });
 
+
+  // Call Trpc api
+  const createPost=api.post.createPost.useMutation({
+    onSuccess(){
+      console.log("Post created successfully")
+    }
+  })
+
   const onSubmit = (data: TWriteFormType) => {
-    console.log(data);
+    createPost.mutate(data)
   };
+
+
   return (
     <Modal isOpen={isWriteModalOpen} onClose={() => setIsWriteModalOpen(false)}>
       {/* {getTags.isSuccess && (

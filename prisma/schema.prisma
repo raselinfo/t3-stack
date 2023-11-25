@@ -74,8 +74,8 @@ model Post {
   slug          String
   featuredImage String?
 
-  html String @db.Text // @db.Text() is typically used for storing larger amounts of text.
-  text String @db.Text
+  html String? @db.Text // @db.Text() is typically used for storing larger amounts of text.
+  text String? @db.Text
 
   authorId String
   author   User   @relation(fields: [authorId], references: [id])
