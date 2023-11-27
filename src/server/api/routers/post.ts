@@ -1,4 +1,5 @@
 import slugify from "slugify";
+import { z } from "zod";
 import {
   createTRPCRouter,
   protectedProcedure,
@@ -72,12 +73,95 @@ export const postRouter = createTRPCRouter({
     }),
 
   // Get Post
-  getPost: publicProcedure.query(async ({ ctx }) => {
+  getPosts: publicProcedure.query(async ({ ctx }) => {
     const posts = await ctx.db.post.findMany({
       orderBy: {
         createdAt: "desc",
       },
+      include: {
+        author: {
+          select: {
+            name: true,
+            image: true,
+          },
+        },
+      },
     });
     return posts;
   }),
+
+  // Get Single Post
+  getPost: publicProcedure
+    .input(
+      z.object({
+        slug: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { db, session } = ctx;
+      const { slug } = input;
+
+      const post = await db.post.findUnique({
+        where: {
+          slug,
+        },
+        select: {
+          id: true,
+          description: true,
+          title: true,
+          text: true,
+          likes: session?.user?.id
+            ? {
+                where: {
+                  userId: session?.user?.id,
+                },
+              }
+            : undefined,
+        },
+      });
+
+      return post;
+    }),
+
+  // Like post
+  likePost: protectedProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { db, session } = ctx;
+      const { user } = session;
+      const { postId } = input;
+
+      await db.like.create({
+        data: {
+          userId: user.id,
+          postId,
+        },
+      });
+    }),
+
+  disLikePost: protectedProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      console.log("Call from dislike")
+      const { session, db } = ctx;
+      const { postId } = input;
+      const { id } = session.user;
+
+      await db.like.delete({
+        where: {
+          userId_postId: {
+            postId: postId,
+            userId: id,
+          },
+        },
+      });
+    }),
 });

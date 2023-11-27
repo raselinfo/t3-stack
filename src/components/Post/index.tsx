@@ -2,7 +2,7 @@ import React from "react";
 import { CiBookmarkPlus } from "react-icons/ci";
 import Link from "next/link";
 import Image from "next/image";
-import dayjs from "dayjs"
+import dayjs from "dayjs";
 
 type PostType = {
   id: string;
@@ -15,6 +15,10 @@ type PostType = {
   authorId: string;
   createdAt: Date;
   updatedAt: Date;
+  author: {
+    name:string;
+    image:string
+  };
 };
 
 type PostParamsType = {
@@ -25,31 +29,28 @@ const index = ({ post }: PostParamsType) => {
   return (
     <div className=" flex flex-col space-y-4 border-b border-gray-300 pb-8 last:border-none">
       <Link
-        // href={`/user/${post.author.username}`}
-        href=""
+        href={`/user/${post.author.name}`}
+        
         className="group flex w-full cursor-pointer items-center space-x-2"
       >
         <div className="relative h-10 w-10 rounded-full bg-gray-400">
-          {/* {post.author.image && (
+          {post.author.image && (
             <Image
               src={post.author.image}
               fill
               alt={post.author.name ?? ""}
               className="rounded-full"
             />
-          )} */}
+          )}
         </div>
         <div>
           <p className="font-semibold">
             <span className="decoration-indigo-600 group-hover:underline">
-              {/* {post.author.name} */}
-              Rasel Hossain
+              {post.author.name}
             </span>{" "}
             &#x2022;
             <span className="mx-1">
               {dayjs(post.createdAt).format("DD/MM/YYYY")}
-              {/* it will remove */}
-              05/06/2023
             </span>
           </p>
 
@@ -57,8 +58,7 @@ const index = ({ post }: PostParamsType) => {
         </div>
       </Link>
       <Link
-        // href={`/${post.slug}`}
-        href="/"
+        href={`/${post.slug}`}
         className="group grid h-44 w-full  grid-cols-12 gap-4 overflow-hidden"
       >
         <div className="col-span-8 flex h-full w-full flex-col space-y-4">

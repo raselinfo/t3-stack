@@ -34,8 +34,7 @@ const WriteFormModal = () => {
   });
 
 
-  const getPosts = api.post.getPost.useQuery();
-
+  const getPosts = api.post.getPosts.useQuery();
   // Call Trpc api
   const createPost= api.post.createPost.useMutation({
     async onSuccess() {

@@ -55,7 +55,7 @@ model User {
   posts         Post[]
   comments      Comment[]
   likes         Like[]
-  bookmarks      Bookmark[]
+  bookmarks     Bookmark[]
 }
 
 model VerificationToken {
@@ -71,7 +71,7 @@ model Post {
   id            String  @id @default(cuid())
   title         String  @unique
   description   String
-  slug          String
+  slug          String  @unique
   featuredImage String?
 
   html String? @db.Text // @db.Text() is typically used for storing larger amounts of text.
@@ -85,7 +85,7 @@ model Post {
   tags      Tag[]
   comments  Comment[]
   likes     Like[]
-  bookmarks  Bookmark[]
+  bookmarks Bookmark[]
 }
 
 model Tag {

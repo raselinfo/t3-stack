@@ -6,7 +6,7 @@ import { api } from "~/utils/api";
 import { ImSpinner3 } from "react-icons/im";
 
 const index = () => {
-  const getPosts = api.post.getPost.useQuery();
+  const getPosts = api.post.getPosts.useQuery();
 
   return (
     <main className="col-span-8 border-r border-gray-300 px-24">
